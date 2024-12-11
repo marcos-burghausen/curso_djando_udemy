@@ -1,0 +1,60 @@
+
+
+services:
+  web:
+    build: .
+    container_name: python
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - DJANGO_SECRET_KEY=mysecretkey
+      - DATABASE_URL=mongodb://root:root@db:27019/pdi
+  # python:
+  #   image: python:3.9
+  #   container_name: backPython
+  #   working_dir: /usr/src/app/
+  #   # depends_on:
+  #   #   # - mysql
+  #   #   - mongo
+  #   networks:
+  #     - network
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - "./backend:/usr/src/app"
+  #     # - "../utils:/usr/src/lib/"
+  #   environment:
+  #     - DEBUG=1
+  #     - DJANGO_SECRET_KEY=mysecretkey
+  #     - DATABASE_URL=mongodb://user:password@db:27017/mydatabase
+  #   tty: true
+    # command: /bin/bash -c "pip install -r requirements.txt && tail -f /dev/null"
+
+  mongo:
+    image: mongo
+    restart: no
+    container_name: mongoUdemy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: mongo
+    networks:
+      - network
+    ports:
+      - "27019:27017"
+    volumes:
+      - "mongo-db:/data/db"
+      - "mongo-configdb:/data/configdb"
+
+volumes:
+  mongo-db:
+    driver: "local"
+  mongo-configdb:
+    driver: "local"
+
+networks:
+  network:
+    driver: bridge
